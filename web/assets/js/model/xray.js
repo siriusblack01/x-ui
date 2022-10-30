@@ -721,6 +721,15 @@ class Inbound extends XrayCommonClass {
         }
     }
 
+    get email() {
+        switch (this.protocol) {
+            case Protocols.VMESS:
+                return this.settings.vmesses[0].email;
+            default:
+                return "";
+        }
+    }
+
     // Socks & HTTP
     get username() {
         switch (this.protocol) {
@@ -936,6 +945,7 @@ class Inbound extends XrayCommonClass {
             port: this.port,
             id: this.settings.vmesses[0].id,
             aid: this.settings.vmesses[0].alterId,
+            email: this.settings.vmesses[0].email,
             net: network,
             type: type,
             host: host,
@@ -1157,16 +1167,18 @@ Inbound.VmessSettings = class extends Inbound.Settings {
     }
 };
 Inbound.VmessSettings.Vmess = class extends XrayCommonClass {
-    constructor(id=RandomUtil.randomUUID(), alterId=0) {
+    constructor(id=RandomUtil.randomUUID(), alterId=0, email="") {
         super();
         this.id = id;
         this.alterId = alterId;
+        this.email = email;
     }
 
     static fromJson(json={}) {
         return new Inbound.VmessSettings.Vmess(
             json.id,
             json.alterId,
+            json.email,
         );
     }
 };
